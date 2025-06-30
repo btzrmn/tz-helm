@@ -10,7 +10,7 @@ arangodb:
     class: microk8s-hostpath
   authentication:
     rootPassword: mysecretpassword
-  serviceType: ClusterIP
+  serviceType: NodePort
   replicas: 1
   single:
     enabled: true
@@ -18,3 +18,4 @@ arangodb:
     image: arangodb/arangodb
     version: latest
     servicePort: 8529
+    nodePort: 30529
