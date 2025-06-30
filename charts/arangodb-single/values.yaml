@@ -9,7 +9,7 @@ arangodb:
     size: 5Gi
     class: local-path
   authentication:
-    rootPassword: mysecretpassword
+    rootPassword: Passw0rdDB2#25
   serviceType: NodePort
   replicas: 1
   single:
