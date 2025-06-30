@@ -6,8 +6,8 @@ image:
   tag: latest
 arangodb:
   storage:
-    size: 15Gi
-    class: microk8s-hostpath
+    size: 5Gi
+    class: local-path
   authentication:
     rootPassword: mysecretpassword
   serviceType: NodePort
