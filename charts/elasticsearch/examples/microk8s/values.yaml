@@ -28,7 +28,7 @@ resources:
 # Request smaller persistent volumes.
 volumeClaimTemplate:
   accessModes: [ "ReadWriteOnce" ]
-  storageClassName: "microk8s-hostpath"
+  storageClassName: "local-path"
   resources:
     requests:
       storage: 100M

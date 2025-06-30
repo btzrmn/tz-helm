@@ -6,7 +6,7 @@ image:
   tag: latest
 arangodb:
   storage:
-    size: 15Gi
+    size: 5Gi
     class: local-path
   authentication:
     rootPassword: mysecretpassword
