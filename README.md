@@ -1,21 +1,12 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-# On-Premise Detailed Installation Guide
+# GKE Detailed Installation Guide
+**This article will be an end-to-end guide for installing Tazama to any cluster but only once your GKE infrastructure is setup**.
 
-This guide provides a comprehensive walkthrough for deploying Tazama on an on-premises Kubernetes cluster. It includes provisioning the infrastructure, setting up MetalLB for networking, configuring persistent storage, and deploying all required components using Helm and Jenkins.
+# Instructions
 
-## Table of Contents
-
-- [On-Prem Deployment Overview](#on-prem-deployment-overview)
-- [Step 0 - Infrastructure Setup](#step-0---infrastructure-setup)
-  - [Linux OS Preparation](#linux-os-preparation)
-  - [Install Docker](#install-docker)
-  - [Install Kubernetes (kubeadm)](#install-kubernetes-kubeadm)
-  - [Cluster Initialization](#cluster-initialization)
-  - [Install a Pod Network (Calico)](#install-a-pod-network-calico)
-  - [Install Helm](#install-helm)
-  - [Install MetalLB](#install-metallb)
-  - [Persistent Storage Setup](#persistent-storage-setup)
+- [GKE Detailed Installation Guide](#gke-detailed-installation-guide)
+- [Instructions](#instructions)
 - [Step 1 - Helm Charts](#step-1---helm-charts)
   - [Overview](#overview)
   - [Prerequisites](#prerequisites)
@@ -49,7 +40,6 @@ This guide provides a comprehensive walkthrough for deploying Tazama on an on-pr
     - [Adding Credentials in Jenkins](#adding-credentials-in-jenkins)
       - [GitHub Credentials](#github-credentials)
       - [GitHub Read Package Credentials](#github-read-package-credentials)
-      - [Kubernetes Credentials](#kubernetes-credentials)
     - [Adding Managed Files for NPM Configuration in Jenkins](#adding-managed-files-for-npm-configuration-in-jenkins)
     - [Adding Managed Files for Container Registry in Jenkins](#adding-managed-files-for-container-registry-in-jenkins)
     - [Jenkins Node.js Configuration](#jenkins-nodejs-configuration)
@@ -61,8 +51,8 @@ This guide provides a comprehensive walkthrough for deploying Tazama on an on-pr
       - [Copy Jobs to Jenkins Pod](#copy-jobs-to-jenkins-pod)
       - [Finalize the Setup](#finalize-the-setup)
       - [Reload Jenkins Configuration](#reload-jenkins-configuration)
-    - [Building Jenkins Agent Locally](#building-jenkins-agent-locally)
-    - [Setting up a Jenkins Cloud Agent](#setting-up-a-jenkins-cloud-agent)
+    - [Building Jenkins Agent Locally](#building-jenkin-agent-locally)
+    - [Setting up a Jenkins cloud agent that will interact with your Kubernetes cluster](#setting-up-a-jenkins-cloud-agent-that-will-interact-with-your-kubernetes-cluster)
 - [Step 4 - Running Jenkins Jobs to Install Processors](#step-4---running-jenkins-jobs-to-install-processors)
   - [Overview](#overview-1)
   - [Populating ArangoDB](#populating-arangodb)
@@ -82,139 +72,57 @@ This guide provides a comprehensive walkthrough for deploying Tazama on an on-pr
   - [Forbidden User on Jenkins Job Builds](#forbidden-user-on-jenkins-job-builds)
 - [Conclusion: Finalizing Tazama System Installation](#conclusion-finalizing-tazama-system-installation)
 
----
+Read through the infrastructure spec before starting with the deployment guide.
+
+[Infrastructure Spec for Tazama Sandbox](https://github.com/frmscoe/docs/blob/main/Technical/Environment-Setup/Infrastructure/Infrastructure-Spec-For-Tazama.md)
+
+[Infrastructure Spec for Tazama](https://github.com/frmscoe/docs/blob/main/Technical/Environment-Setup/Infrastructure/Infrastructure-Spec-For-Tazama.md)
 
 **Important:** Access to the Tazama GIT Repository is required to proceed. If you do not currently have this access, or if you are unsure about your access level, please reach out to the Tazama Team to request the necessary permissions. It's crucial to ensure that you have the appropriate credentials to access the repository for seamless integration and workflow management.
 
-## Step 0 - Infrastructure Setup
+### Artifact Registry Setup
 
-### Linux OS Preparation
+Create a Artifact Registry on Google CLoud:
 
-Use Ubuntu Server or CentOS/RHEL. Ensure your servers meet the following:
+1. **Enable the Artifact Registry API:** Ensure the Artifact Registry API is enabled in your GCP project.
+2. **Create repositories:** Use the following `gcloud` command:
+   ```bash
+   gcloud artifacts repositories create <repository-name> \
+       --repository-format=docker \
+       --location=<region> \
+       --description="Tazama components repository"
+   ```
+3. **Authenticate Docker with Artifact Registry:**
+   ```bash
+   gcloud auth configure-docker <region>-docker.pkg.dev
+   ```
 
-- 4+ CPU Cores
-- 8+ GB RAM
-- Static IPs assigned
-- Hostnames set
-- Root or sudo access
+# Step 1 - Helm charts
 
-### Install Docker
+## Overview
 
-```bash
-sudo apt update && sudo apt install -y docker.io
-sudo systemctl enable docker && sudo systemctl start docker
-```
+This guide will walk you through the setup of the Tazama (Real-time Antifraud and Money Laundering Monitoring System) on a Kubernetes cluster using Helm charts. Helm charts simplify the deployment and management of applications on Kubernetes clusters. We will deploy various services, ingresses, pods, replica sets, and more.
 
-### Install Kubernetes (kubeadm)
+## Prerequisites
 
-Follow these steps on **all nodes**:
+- A Kubernetes cluster up and running.
+- Helm installed on your local machine or wherever you plan to run the commands from.
+- Basic understanding of Kubernetes concepts like namespaces, pods, and ingress.
 
-```bash
-sudo apt update && sudo apt install -y apt-transport-https curl
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt update && sudo apt install -y kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
-```
+## Adding Required Namespaces
 
-### Cluster Initialization
+The installation of our system requires the creation of specific namespaces within your cluster. These namespaces will be automatically created by the infra-chart Helm chart. Ensure these namespaces exist before proceeding:
 
-On the **master node only**:
+- `cicd`
+- `development`
+- `ingress-nginx`
+- `processor`
 
-```bash
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-```
-
-Run the output `kubeadm join` command on all **worker nodes**.
-
-### Install a Pod Network (Calico)
-
-Kubernetes does not install a network plugin by default. After `kubeadm init`, you must manually install a Container Network Interface (CNI) such as **Calico**. Calico provides networking and network policy features and includes components like the `calico-node` DaemonSet and the `calico-kube-controllers` Deployment.
-
-To install Calico (including the kube-controllers), run the following:
+If they are not created automatically, you can manually add them using the following command for each namespace:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+kubectl create namespace <namespace-name>
 ```
-
-This will deploy:
-- `calico-node`: A DaemonSet that handles routing and enforcement on each node.
-- `calico-kube-controllers`: A Deployment that manages Calico-specific resources such as IP address management and network policies.
-
-To confirm the installation:
-
-```bash
-kubectl get pods -n kube-system -l k8s-app=calico-kube-controllers
-```
-
-Ensure all Calico pods show a `Running` status before proceeding.
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
-```
-
-### Install Helm
-
-```bash
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-```
-
-### Install MetalLB
-
-MetalLB is used to expose services using LoadBalancer type.
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.10/config/manifests/metallb-native.yaml
-```
-
-Wait for all MetalLB pods to be in the `Running` state:
-
-```bash
-kubectl get pods -n metallb-system
-```
-
-#### Configure MetalLB IP Pool:
-
-Create a config file `metallb-config.yaml`:
-
-```yaml
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: default-address-pool
-  namespace: metallb-system
-spec:
-  addresses:
-  - 192.168.1.240-192.168.1.250
----
-apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
-metadata:
-  name: l2advertisement
-  namespace: metallb-system
-```
-
-Apply the configuration:
-
-```bash
-kubectl apply -f metallb-config.yaml
-```
-
-> Note: Replace the IP range with a valid range from your local network.
-
-### Persistent Storage Setup
-
-You can use NFS or local persistent volumes. Here’s an example for local path provisioner:
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
-kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-```
-
----
 
 ## Helm Repository Setup
 
@@ -275,10 +183,6 @@ helm install kibana Tazama/kibana --namespace=development --set ingress.enabled=
 
 If you prefer not to configure an ingress controller, you can simply use port forwarding to access the front-end interfaces of your applications. This approach will not impact the end-to-end functionality of your system, as it is designed to utilize **fully qualified domain names** (FQDNs) for internal cluster communication.
 
-Use `kubectl get svc -n ingress-nginx` to get the external IP assigned by MetalLB for accessing services.
-
-Ensure DNS entries or `/etc/hosts` are updated to map service hostnames to the external IP.
-
 ### Installing Helm Charts
 
 The Tazama system is composed of multiple Helm charts for various services and components. These need to be installed in a specific order due to dependencies.
@@ -301,11 +205,34 @@ helm install arango Tazama/arangodb --namespace=development
 helm install jenkins Tazama/jenkins --namespace=cicd
 helm install nats Tazama/nats --namespace=development
 ```
-3. Install Valkey. Valkey is an open source (BSD) high-performance key/value datastore that supports a variety workloads such as caching, message queues, and can act as a primary database.
+
+3. Install Valkey. 
+
+Valkey is an open source (BSD) high-performance key/value datastore that supports a variety workloads such as caching, message queues, and can act as a primary database.
 
 ```bash
 helm install valkey-cluster bitnami/valkey-cluster --version 2.1.1 --namespace=development
 ```
+
+4. We're going to install Jenkins with helm by following the official docs. Take note of post installation notes to retrieve password and port forward.
+
+```bash
+helm repo add jenkins https://charts.jenkins.io
+helm repo update
+helm install jenkins jenkins/jenkins --set ingress.enabled=true --namespace=cicd
+```
+
+### Accessing Jenkins UI
+
+The following sections of the guide require you to work within the Jenkins UI. You can either access the UI through a doamin if you configured an ingress or by port forwarding.
+
+Port forward Jenkins to be accessible on localhost:8080 by running:
+  `kubectl --namespace cicd port-forward svc/jenkins 8080:8080`
+
+Get your 'admin' user password by running:
+  `kubectl exec --namespace cicd -it svc/jenkins -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo`
+
+Navigate to the Jenkins UI, username `admin` and retrieved password to login. Go to `Manage Jenkins`, Under `System Configuration`, select `Plugins` and install the `Configuration File`, `Nodejs` and `Docker` plugins that will enable later configuration steps.
 
 **Additional**
 For optional components like Grafana, Prometheus, Vault, and KeyCloak, use similar commands if you decide to implement these features.
@@ -605,37 +532,6 @@ Credentials are critical for Jenkins to interact with other services like source
 5. In the description, note the purpose, such as GitHub package read access.
 6. Click **Save**.
 
-#### Kubernetes Credentials
-
-To configure Jenkins to use Kubernetes secrets for authenticating with Kubernetes services or private registries, you can follow these steps, similar to setting up GitHub package read access:
-
-1. **Retrieve the Kubernetes Token**:
-
-- Access your Kubernetes environment and locate the secret intended for Jenkins authentication, in this case, `scjenkins-secret`.
-  - Extract the token value from the secret, which is usually base64-encoded. You have need to decode.
-
-1. **Add Secret in Jenkins**:
-
-- Navigate to the Jenkins dashboard and go to the credentials management section.
-  - Choose to add new credentials, selecting the "Secret text" type.
-  - Paste the token you retrieved from the `scjenkins-secret` in namespace=**processor** into the Secret field.
-
-3. **Configure the Credential ID**:
-
-- Set the ID of the new secret to `kubernetespro`. This ID will be used to reference these credentials within your Jenkins pipelines or job configurations.
-
-4. **Add a Description**:
-
-- Provide a description for the secret to document its use, such as "Token for authenticating Jenkins with Kubernetes services."
-
-5. **Save the Configuration**:
-
-- Click Save to store the new credentials in Jenkins.
-
-Following this process will allow Jenkins jobs to authenticate with Kubernetes using the token stored in the secret, enabling operations that require Kubernetes access or pulling images from private registries linked to your Kubernetes environment.
-
-![image-20240215-150928.png](./Images/image-20240215-150928.png)
-![image-20240215-151159.png](./Images/image-20240215-151159.png)
 
 ### Adding Managed Files for NPM Configuration in Jenkins
 
@@ -671,7 +567,7 @@ Once you've added this managed file, Jenkins can use it in various jobs that req
 
 **Navigate to Manage Jenkins → Managed files**
 
-![Jenkins_service account_file.png](./Images/Jenkins_service account_file.png)
+![Jenkins_service_account_file.png](./Images/Jenkins_service_account_file.png)
 
 The image shows a Jenkins configuration screen for adding a managed file, specifically the service account registry. Here's a breakdown of the steps and fields:
 
@@ -791,14 +687,24 @@ The same reasoning applies to passwords are that explicitly stated to need a sin
   - **value:** nats
 - `NATS_SERVER_URL`: The URL for the NATS server.
   - **value:** nats.development.svc.cluster.local:4222
-- `RedisCluster`: A flag to indicate if Redis is running in cluster mode.
+- `ValkeyCluster`: A flag to indicate if Valkey is running in cluster mode.
   - **value:** true
-- `RedisPassword`: The password for accessing Redis.
+- `ValkeyPassword`: The password for accessing Valkey.
   - **eg:** ty6r5\*&p0
-- `RedisServers`: The hostname for the Redis Cluster service. **NB:** The single quotes need to be added in to the host string.
-  - **value:** '[{"host": "redis-cluster.development.svc.cluster.local", "port":6379}]'
+- `ValkeyServers`: The hostname for the Valkey Cluster service. **NB:** The single quotes need to be added in to the host string.
+  - **value:** '[{"host": "valkey-cluster-primary-0.valkey-test-headless.default.svc.cluster.local", "port":6379}]'
 - `Repository`: This parameter specifies the name of a repository
   - **value:** frmscoe
+- `AUTH_URL`: This parameter specifies the Base URL where KeyCloak is hosted
+  - **value:** https://keycloak.example.com:8080
+- `KEYCLOAK_REALM`: This parameter specifies the KeyCloak Realm for Tazama
+  - **value:** tazama
+- `CERT_PATH_PRIVATE`: This parameter specifies the pem file path for signing Tazama tokens
+  - **value:** /path/to/private-key.pem
+- `CLIENT_SECRET`: This parameter specifies the secret of the KeyCloak client
+  - **value:** someClientGeneratedSecret123
+- `CLIENT_ID`: This parameter specifies the KeyCloak defined client for auth-lib
+  - **value:** auth-lib-client
 
 ### Adding Jenkins Jobs
 
@@ -838,13 +744,28 @@ kubectl cp . <name of pod>:/var/jenkins_home/jobs/ -n cicd
 
 - After copying the job configurations, your Jenkins instance should recognize the new jobs. Jenkins will automatically load job configurations found in the `/var/jenkins_home/jobs/` directory.
 
-### Building Jenkin Agent Locally
+#### Reload Jenkins Configuration:
+
+- You might need to manually reload the Jenkins configuration or restart the Jenkins service for the new job configurations to take effect. This can be done from the Jenkins interface or by restarting the Jenkins pod:
+
+```bash
+kubectl rollout restart deployment <jenkins-deployment-name> -n cicd
+```
+
+- Make sure to replace `<jenkins-deployment-name>` with the actual deployment name of your Jenkins instance.
+- You can also safeRestart through the URL.
+
+**eg:** [http://localhost:52933/safeRestart](http://localhost:52933/safeRestart)
+
+![image-20240215-054140.png](./Images/image-20240215-054140.png)
+
+### Building Jenkins Agent Locally
 
 **This needs to be completed before adding the Jenkins Cloud agent.**
 
 Please follow the following document to help you build and push the image to the container registry.
 
-[Building the Jenkins Agent Image](https://github.com/frmscoe/docs/blob/main/Technical/Release-Management/building-the-jenkins-image.md) - This link is t show you how to build the docker image , the dockerfile that needs to be used specifically to GC is as follows:
+[Building the Jenkins Agent Image](https://github.com/frmscoe/docs/blob/main/Technical/Release-Management/building-the-jenkins-image.md) - This link is to show you how to build the docker image locally and push it to your registry , the dockerfile that needs to be used specifically to GC is as follows:
 
 ```dockerfile
 # Use a base Jenkins agent image
@@ -942,20 +863,6 @@ By properly configuring image pull secrets in your Jenkins Kubernetes pod templa
 
 ![image-20240215-144955.png](./Images/image-20240215-144955.png)
 
-#### Reload Jenkins Configuration:
-
-- You might need to manually reload the Jenkins configuration or restart the Jenkins service for the new job configurations to take effect. This can be done from the Jenkins interface or by restarting the Jenkins pod:
-
-```bash
-kubectl rollout restart deployment <jenkins-deployment-name> -n cicd
-```
-
-- Make sure to replace `<jenkins-deployment-name>` with the actual deployment name of your Jenkins instance.
-- You can also safeRestart through the URL.
-
-**eg:** [http://localhost:52933/safeRestart](http://localhost:52933/safeRestart)
-
-![image-20240215-054140.png](./Images/image-20240215-054140.png)
 
 # Step 4 :Running Jenkins Jobs to Install Processors
 
@@ -987,18 +894,6 @@ After importing the Jenkins jobs, you need to configure each job with the approp
 - Set the **Repository URL** to the Git repository where the code for the processor is located. This is typically a URL like https://github.com/<Repository>/event-director/.
 - Under Credentials, select the appropriate credentials from the drop-down list, such as **Github Creds**, which should correspond to the credentials that have access to the repository.
 
-3. **Binding Credentials:**
-
-- Under the **Bindings** section, define the environment variables that the job will use internally.
-- For username and password types, such as container registry credentials, set the appropriate **Username Variable** and **Password Variable**. Use **REG\_USER** and **REG\_PASS** for registry credentials.
-- Choose the specific credentials from the drop-down list, like **Login info for the Sybrin Azure container registry.**
-- For secret texts, such as a GitHub access token, set the Variable to an environment variable name, such as **READ\_GH\_TOKEN**, and select the appropriate credentials, like **github public read package**.
-
-By completing these steps, you ensure that each Jenkins job can access the necessary repositories and services with the correct permissions and interact with your Kubernetes cluster using the right endpoints and credentials. It's essential to review and verify these settings regularly, especially after any changes to the credentials or infrastructure.
-
-![image-20240213-064147.png](./Images/image-20240213-064147.png)
-![image-20240213-064707.png](./Images/image-20240213-064707.png)
-![image-20240213-064256.png](./Images/image-20240213-064256.png)
 
 ### Deploying to the Cluster:
 
@@ -1032,7 +927,7 @@ The "E2E Test" job in Jenkins is an essential component for ensuring the integri
 - Navigate to the **transactions** collection within the database.
 - Confirm the presence of a transaction record, which signifies a successful end-to-end test execution.
 
-If for some reason the E2E jobs doesnt run double check your variables in the configuration of the job, if it still doesnt work you can use postman to test the E2E.
+If for some reason the E2E job doesnt run double check your variables in the configuration of the job, if it still doesnt work you can use postman to test the E2E - Contact the Tazama Team.
 
 ![image-20240213-122427.png](./Images/image-20240213-122427.png)
 
@@ -1178,7 +1073,7 @@ data:
 
 ### Forbidden user on Jenkins job builds to deploy/restart pods 
 
-![Jenkins_service account_error.png](./Images/Jenkins_service account_error.png)
+![Jenkins_service_account_error.png](./Images/Jenkins_service_account_error.png)
 
 The error indicates that the Kubernetes service account `system:serviceaccount:cicd:default` does not have the necessary permissions to access the `deployments` resource in the `apps` group in the `processor` namespace.
 
