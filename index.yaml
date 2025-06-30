@@ -15,7 +15,7 @@ entries:
     sources:
     - https://github.com/elastic/apm
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/apm-server-8.5.1.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/apm-server-8.5.1.tgz
     version: 8.5.1
   arangodb:
   - apiVersion: v2
@@ -23,7 +23,7 @@ entries:
     digest: 244f65b20c698ea2f440e9451adfc3d0e2fff0c041de3346b337aaf39956e3be
     name: arangodb
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/arangodb-1.0.0.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/arangodb-1.0.0.tgz
     version: 1.0.0
   elasticsearch:
   - apiVersion: v1
@@ -40,7 +40,7 @@ entries:
     sources:
     - https://github.com/elastic/elasticsearch
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/elasticsearch-8.5.1.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/elasticsearch-8.5.1.tgz
     version: 8.5.1
   grafana:
   - annotations:
@@ -78,7 +78,7 @@ entries:
     - https://github.com/grafana/helm-charts
     type: application
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/grafana-6.58.8.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/grafana-6.58.8.tgz
     version: 6.58.8
   infra-chart:
   - apiVersion: v2
@@ -89,7 +89,7 @@ entries:
     name: infra-chart
     type: application
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/infra-chart-1.0.0.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/infra-chart-1.0.0.tgz
     version: 1.0.0
   ingress-nginx:
   - annotations:
@@ -117,7 +117,7 @@ entries:
     sources:
     - https://github.com/kubernetes/ingress-nginx
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/ingress-nginx-4.9.1.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/ingress-nginx-4.9.1.tgz
     version: 4.9.1
   jenkins:
   - annotations:
@@ -170,7 +170,7 @@ entries:
     - https://github.com/maorfr/kube-tasks
     - https://github.com/jenkinsci/configuration-as-code-plugin
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/jenkins-5.0.13.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/jenkins-5.0.13.tgz
     version: 5.0.13
   keycloak:
   - annotations:
@@ -210,7 +210,7 @@ entries:
     sources:
     - https://github.com/bitnami/charts/tree/main/bitnami/keycloak
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/keycloak-18.0.0.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/keycloak-18.0.0.tgz
     version: 18.0.0
   kibana:
   - apiVersion: v1
@@ -227,7 +227,7 @@ entries:
     sources:
     - https://github.com/elastic/kibana
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/kibana-8.5.1.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/kibana-8.5.1.tgz
     version: 8.5.1
   logstash:
   - apiVersion: v1
@@ -244,7 +244,7 @@ entries:
     sources:
     - https://github.com/elastic/logstash
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/logstash-8.5.1.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/logstash-8.5.1.tgz
     version: 8.5.1
   nats:
   - apiVersion: v2
@@ -265,7 +265,7 @@ entries:
       url: https://github.com/nats-io
     name: nats
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/nats-0.19.16.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/nats-0.19.16.tgz
     version: 0.19.16
   prometheus:
   - annotations:
@@ -323,7 +323,7 @@ entries:
     - https://github.com/kubernetes/kube-state-metrics
     type: application
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/prometheus-23.2.0.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/prometheus-23.2.0.tgz
     version: 23.2.0
   vault:
   - annotations:
@@ -351,6 +351,6 @@ entries:
     - https://github.com/hashicorp/vault-k8s
     - https://github.com/hashicorp/vault-csi-provider
     urls:
-    - https://vorsterk.github.io/GKE-helm/charts/vault-0.24.0.tgz
+    - https://btzrmn.github.io/GKE-helm/charts/vault-0.24.0.tgz
     version: 0.24.0
 generated: "2025-02-17T14:20:05.4185051+02:00"
