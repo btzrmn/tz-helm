@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: Apache-2.0
+
+controller:
+  service:
+    type: ClusterIP
+  admissionWebhooks:
+    enabled: true
+    createSecretJob:
+      resources:
+        limits:
+          cpu: 10m
+          memory: 20Mi
+        requests:
+          cpu: 10m
+          memory: 20Mi
+    patchWebhookJob:
+      resources:
+        limits:
+          cpu: 10m
+          memory: 20Mi
+        requests:
+          cpu: 10m
+          memory: 20Mi
+    patch:
+      enabled: true
