@@ -9,8 +9,8 @@ arangodb:
     size: 5Gi
     class: manual
   authentication:
-    rootPassword: mysecretpassword
-  serviceType: ClusterIP
+    rootPassword: Passw0rdDB2#25
+  serviceType: NodePort
   replicas: 1
   single:
     enabled: true
@@ -18,3 +18,4 @@ arangodb:
     image: arangodb/arangodb
     version: latest
     servicePort: 8529
+    nodePort: 30529
