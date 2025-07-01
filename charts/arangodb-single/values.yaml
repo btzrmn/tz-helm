@@ -3,7 +3,7 @@
 # file: values.yaml
 image:
   repository: arangodb/arangodb
-  tag: latest
+  tag: 3.11.10.1
 arangodb:
   storage:
     size: 5Gi
