@@ -659,5 +659,6 @@ spec:
         {{- if .Values.primary.persistence.selector }}
         selector: {{- include "common.tplvalues.render" (dict "value" .Values.primary.persistence.selector "context" $) | nindent 10 }}
         {{- end }}
+        storageClassName: {{ .Values.primary.persistence.storageClass | quote }}
         {{- include "common.storage.class" (dict "persistence" .Values.primary.persistence "global" .Values.global) | nindent 8 }}
   {{- end }}
