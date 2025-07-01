@@ -7,7 +7,7 @@ image:
 arangodb:
   storage:
     size: 5Gi
-    class: local-path
+    class: manual
   authentication:
     rootPassword: mysecretpassword
   serviceType: ClusterIP
