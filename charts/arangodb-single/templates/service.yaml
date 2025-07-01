@@ -18,4 +18,3 @@ spec:
     - name: arangodb
       port: {{ .Values.arangodb.single.servicePort }}
       targetPort: {{ .Values.arangodb.single.servicePort }}
-      nodePort: {{ .Values.arangodb.single.nodePort }}

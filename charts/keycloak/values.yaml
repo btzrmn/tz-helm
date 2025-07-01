@@ -20,7 +20,7 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: "local-path"
+  storageClass: "microk8s-hostpath"
 
 ## @section Common parameters
 ##
