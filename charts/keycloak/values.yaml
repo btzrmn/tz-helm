@@ -1057,7 +1057,7 @@ postgresql:
   auth:
     postgresPassword: ""
     username: bn_keycloak
-    password: ""
+    password: "Passw0rdDB2#25"
     database: bitnami_keycloak
     existingSecret: ""
   architecture: standalone
