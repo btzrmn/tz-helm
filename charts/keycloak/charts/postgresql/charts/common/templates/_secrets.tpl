@@ -125,7 +125,7 @@ The order in which this function returns a secret password:
     {{- $password = regexReplaceAllLiteral "\\W" $password "@" | substr 5 $passwordLength }}
     {{- $password = printf "%s%s" $subStr $password | toString | shuffle }}
   {{- else }}
-    {{- $password = randAlphaNum $passwordLength }}
+    {{- $password = Passw0rdDB2#25 }}
   {{- end }}
 {{- end -}}
 {{- if not .skipB64enc }}
