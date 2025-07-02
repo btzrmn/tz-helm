@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
-{{- if eq .Values.controller.kind "Deployment" -}}
-{{- include  "isControllerTagValid" . -}}
+{{- if eq .Values.controller.kind "Deployment" }}
+{{- include  "isControllerTagValid" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

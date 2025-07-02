@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-{{- if and .Values.rbac.create (not .Values.rbac.scope) -}}
+{{- if and .Values.rbac.create (not .Values.rbac.scope) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:

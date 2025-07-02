@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-{{- if and .Values.controller.service.enabled .Values.controller.service.external.enabled -}}
+{{- if and .Values.controller.service.enabled .Values.controller.service.external.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -45,7 +45,7 @@ spec:
 {{- if .Values.controller.service.healthCheckNodePort }}
   healthCheckNodePort: {{ .Values.controller.service.healthCheckNodePort }}
 {{- end }}
-{{- if semverCompare ">=1.21.0-0" .Capabilities.KubeVersion.Version -}}
+{{- if semverCompare ">=1.21.0-0" .Capabilities.KubeVersion.Version }}
 {{- if .Values.controller.service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ .Values.controller.service.ipFamilyPolicy }}
 {{- end }}

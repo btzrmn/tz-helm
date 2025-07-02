@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-{{- if and ( .Values.controller.metrics.enabled ) ( .Values.controller.metrics.prometheusRule.enabled ) ( .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" ) -}}
+{{- if and ( .Values.controller.metrics.enabled ) ( .Values.controller.metrics.prometheusRule.enabled ) ( .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" ) }}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:

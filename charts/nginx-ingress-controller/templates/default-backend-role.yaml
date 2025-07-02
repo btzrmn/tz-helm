@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-{{- if and .Values.rbac.create .Values.podSecurityPolicy.enabled .Values.defaultBackend.enabled -}}
+{{- if and .Values.rbac.create .Values.podSecurityPolicy.enabled .Values.defaultBackend.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
