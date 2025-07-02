@@ -1055,10 +1055,10 @@ keycloakConfigCli:
 postgresql:
   enabled: true
   auth:
-    postgresPassword: "Passw0rdDB2#25"
-    username: "bn_keycloak"
-    password: "Passw0rdDB2#25"
-    database: "bitnami_keycloak"
+    postgresPassword: Passw0rdDB2025
+    username: bn_keycloak
+    password: Passw0rdDB2025
+    database: bitnami_keycloak
     existingSecret: ""
   architecture: standalone
 ## External PostgreSQL configuration
@@ -1081,7 +1081,7 @@ externalDatabase:
   port: 5432
   user: bn_keycloak
   database: bitnami_keycloak
-  password: Passw0rdDB2#25
+  password: Passw0rdDB2025
   existingSecret: ""
   existingSecretHostKey: ""
   existingSecretPortKey: ""
