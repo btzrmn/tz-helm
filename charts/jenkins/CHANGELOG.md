@@ -72,7 +72,7 @@ The Helm Chart is now updated automatically via [Renovate](https://docs.renovate
 
 ## 4.12.1
 
-Update Jenkins image and appVersion to jenkins lts release version 2.426.3
+Update Jenkins image and appVersion to jenkins lts release version 2.440.3
 
 ## 4.12.0
 

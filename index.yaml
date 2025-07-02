@@ -135,7 +135,7 @@ entries:
         - Update `docker.io/kiwigrid/k8s-sidecar` to version `docker.io/kiwigrid/k8s-sidecar`
       artifacthub.io/images: |
         - name: jenkins
-          image: docker.io/jenkins/jenkins:2.426.3-jdk17
+          image: docker.io/jenkins/jenkins:2.440.3-jdk17
         - name: k8s-sidecar
           image: docker.io/kiwigrid/k8s-sidecar:1.25.4
         - name: inbound-agent
@@ -149,7 +149,7 @@ entries:
         - name: support
           url: https://github.com/jenkinsci/helm-charts/issues
     apiVersion: v2
-    appVersion: 2.426.3
+    appVersion: 2.440.3
     created: "2025-04-23T11:39:18.1280027+02:00"
     description: Jenkins - Build great things at any scale! The leading open source
       automation server, Jenkins provides over 1800 plugins to support building, deploying
