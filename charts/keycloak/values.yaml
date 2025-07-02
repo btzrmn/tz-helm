@@ -1055,7 +1055,7 @@ keycloakConfigCli:
 postgresql:
   enabled: true
   auth:
-    postgresPassword: ""
+    postgresPassword: "Passw0rdDB2#25"
     username: bn_keycloak
     password: "Passw0rdDB2#25"
     database: bitnami_keycloak
