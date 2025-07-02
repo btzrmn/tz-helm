@@ -36,8 +36,8 @@ global:
       database: bitnami_keycloak
       existingSecret: ""
       secretKeys:
-        adminPasswordKey: Passw0rdDB2025
-        userPasswordKey: Passw0rdDB2025
+        adminPasswordKey: ""
+        userPasswordKey: ""
         replicationPasswordKey: ""
     ## @param global.postgresql.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
     ##
