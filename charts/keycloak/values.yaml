@@ -1077,7 +1077,7 @@ postgresql:
 ## @param externalDatabase.annotations Additional custom annotations for external database secret object
 ##
 externalDatabase:
-  host: keycloak-postgresql
+  host: keycloak-postgresql.development.svc.cluster.local
   port: 5432
   user: bn_keycloak
   database: bitnami_keycloak
