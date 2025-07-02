@@ -30,10 +30,10 @@ global:
     ## @param global.postgresql.auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials (overrides `auth.secretKeys.replicationPasswordKey`). Only used when `global.postgresql.auth.existingSecret` is set.
     ##
     auth:
-      postgresPassword: ""
-      username: ""
-      password: ""
-      database: ""
+      postgresPassword: "Passw0rdDB2#25"
+      username: bn_keycloak
+      password: "Passw0rdDB2#25"
+      database: bitnami_keycloak
       existingSecret: ""
       secretKeys:
         adminPasswordKey: ""
@@ -129,16 +129,16 @@ auth:
   enablePostgresUser: true
   ## @param auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` is provided
   ##
-  postgresPassword: ""
+  postgresPassword: "Passw0rdDB2#25"
   ## @param auth.username Name for a custom user to create
   ##
-  username: ""
+  username: bn_keycloak
   ## @param auth.password Password for the custom user to create. Ignored if `auth.existingSecret` is provided
   ##
-  password: ""
+  password: "Passw0rdDB2#25"
   ## @param auth.database Name for a custom database to create
   ##
-  database: ""
+  database: bitnami_keycloak
   ## @param auth.replicationUsername Name of the replication user
   ##
   replicationUsername: repl_user
