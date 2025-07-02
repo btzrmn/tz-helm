@@ -31,9 +31,9 @@ global:
     ##
     auth:
       postgresPassword: "Passw0rdDB2#25"
-      username: bn_keycloak
+      username: "bn_keycloak"
       password: "Passw0rdDB2#25"
-      database: bitnami_keycloak
+      database: "bitnami_keycloak"
       existingSecret: ""
       secretKeys:
         adminPasswordKey: ""
@@ -43,7 +43,7 @@ global:
     ##
     service:
       ports:
-        postgresql: ""
+        postgresql: "5432"
 
 ## @section Common parameters
 ##
@@ -132,13 +132,13 @@ auth:
   postgresPassword: "Passw0rdDB2#25"
   ## @param auth.username Name for a custom user to create
   ##
-  username: bn_keycloak
+  username: "bn_keycloak"
   ## @param auth.password Password for the custom user to create. Ignored if `auth.existingSecret` is provided
   ##
   password: "Passw0rdDB2#25"
   ## @param auth.database Name for a custom database to create
   ##
-  database: bitnami_keycloak
+  database: "bitnami_keycloak"
   ## @param auth.replicationUsername Name of the replication user
   ##
   replicationUsername: repl_user

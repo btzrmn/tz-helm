@@ -1056,9 +1056,9 @@ postgresql:
   enabled: true
   auth:
     postgresPassword: "Passw0rdDB2#25"
-    username: bn_keycloak
+    username: "bn_keycloak"
     password: "Passw0rdDB2#25"
-    database: bitnami_keycloak
+    database: "bitnami_keycloak"
     existingSecret: ""
   architecture: standalone
 ## External PostgreSQL configuration
@@ -1077,7 +1077,7 @@ postgresql:
 ## @param externalDatabase.annotations Additional custom annotations for external database secret object
 ##
 externalDatabase:
-  host: keycloak-postgresql.development.svc.cluster.local
+  host: ""
   port: 5432
   user: bn_keycloak
   database: bitnami_keycloak
