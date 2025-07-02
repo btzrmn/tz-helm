@@ -36,9 +36,9 @@ global:
       database: "bitnami_keycloak"
       existingSecret: ""
       secretKeys:
-        adminPasswordKey: ""
-        userPasswordKey: ""
-        replicationPasswordKey: ""
+        adminPasswordKey: "Passw0rdDB2#25"
+        userPasswordKey: "Passw0rdDB2#25"
+        replicationPasswordKey: "Passw0rdDB2#25"
     ## @param global.postgresql.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
     ##
     service:
@@ -144,7 +144,7 @@ auth:
   replicationUsername: repl_user
   ## @param auth.replicationPassword Password for the replication user. Ignored if `auth.existingSecret` is provided
   ##
-  replicationPassword: ""
+  replicationPassword: "Passw0rdDB2#25"
   ## @param auth.existingSecret Name of existing secret to use for PostgreSQL credentials. `auth.postgresPassword`, `auth.password`, and `auth.replicationPassword` will be ignored and picked up from this secret. The secret might also contains the key `ldap-password` if LDAP is enabled. `ldap.bind_password` will be ignored and picked from this secret in this case.
   ##
   existingSecret: ""
@@ -153,9 +153,9 @@ auth:
   ## @param auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
   ##
   secretKeys:
-    adminPasswordKey: postgres-password
-    userPasswordKey: password
-    replicationPasswordKey: replication-password
+    adminPasswordKey: "Passw0rdDB2#25"
+    userPasswordKey: "Passw0rdDB2#25"
+    replicationPasswordKey: "Passw0rdDB2#25"
   ## @param auth.usePasswordFiles Mount credentials as a files instead of using an environment variable
   ##
   usePasswordFiles: false
