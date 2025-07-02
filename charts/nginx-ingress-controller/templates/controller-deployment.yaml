@@ -1,5 +1,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
+{{- /*
+Copyright VMware, Inc.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
 {{- if eq .Values.controller.kind "Deployment" -}}
 {{- include  "isControllerTagValid" . -}}
 apiVersion: apps/v1
