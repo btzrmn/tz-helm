@@ -42,7 +42,7 @@ global:
     # See the top level serverTelemetry section below before enabling this feature.
     prometheusOperator: false
 
-namespace: development
+namespace: fraudblok-development
 
 injector:
   # True if you want to enable vault agent injection.

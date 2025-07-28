@@ -14,7 +14,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "vault.fullname" . }}-ui
-  namespace: development
+  namespace: fraudblok-development
   labels:
     helm.sh/chart: {{ include "vault.chart" . }}
     app.kubernetes.io/name: {{ include "vault.name" . }}-ui

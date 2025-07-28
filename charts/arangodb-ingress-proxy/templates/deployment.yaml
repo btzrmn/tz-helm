@@ -4,14 +4,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: arangodb-ingress-proxy
-    namespace: development
+    namespace: fraudblok-development
     labels:
         app.kubernetes.io/name: {{ template "arangodb-ingress-proxy.name" . }}
         helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: {{ .Release.Name }}
         release: {{ .Release.Name }}
-        meta.helm.sh/release-namespace: development
+        meta.helm.sh/release-namespace: fraudblok-development
 spec:
     replicas: {{ .Values.replicas }}
     selector:

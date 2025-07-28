@@ -5,7 +5,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: arango
-  namespace: development
+  namespace: fraudblok-development
   labels:
     app.kubernetes.io/instance: arango
     app.kubernetes.io/managed-by: Helm

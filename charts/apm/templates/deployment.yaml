@@ -4,7 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "apm.fullname" . }}
-  namespace: development
+  namespace: fraudblok-development
   labels:
     app: {{ .Chart.Name }}
     release: {{ .Release.Name | quote }}

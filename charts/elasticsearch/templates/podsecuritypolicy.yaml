@@ -6,7 +6,7 @@ apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   name: {{ default $fullName .Values.podSecurityPolicy.name | quote }}
-  namespace: development
+  namespace: fraudblok-development
   labels:
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}

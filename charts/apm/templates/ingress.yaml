@@ -9,7 +9,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "apm.fullname" . }}
-  namespace: development
+  namespace: fraudblok-development
   labels:
     app: {{ .Chart.Name }}
     release: {{ .Release.Name | quote }}

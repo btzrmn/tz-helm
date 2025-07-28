@@ -433,7 +433,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: tlscomsecret
-  namespace: development
+  namespace: fraudblok-development
 type: kubernetes.io/tls
 data:
   tls.crt: <base64-encoded-cert>
@@ -461,7 +461,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cicd-ingress
-  namespace: cicd
+  namespace: fraudblok-cicd
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
@@ -1170,7 +1170,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: frmpullsecret
-  namespace: cicd
+  namespace: fraudblok-cicd
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: >-
@@ -1222,7 +1222,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: cicd
+  namespace: fraudblok-cicd
 roleRef:
   kind: Role
   name: deployment-access
@@ -1238,7 +1238,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: cicd
+  namespace: fraudblok-cicd
 roleRef:
   kind: ClusterRole
   name: deployment-access

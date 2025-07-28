@@ -5,7 +5,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "elasticsearch.uname" . }}
-  namespace: development
+  namespace: fraudblok-development
   labels:
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}

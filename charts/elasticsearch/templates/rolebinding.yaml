@@ -6,7 +6,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ $fullName | quote }}
-  namespace: development
+  namespace: fraudblok-development
   labels:
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}
@@ -15,7 +15,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: "{{ template "elasticsearch.serviceAccount" . }}"
-    namespace: development
+    namespace: fraudblok-development
 roleRef:
   kind: Role
   name: {{ $fullName | quote }}

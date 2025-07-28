@@ -4,14 +4,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
     name: arangodb-ingress-proxy
-    namespace: development
+    namespace: fraudblok-development
     labels:
         app.kubernetes.io/name: arangodb-ingress-proxy
         helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: {{ .Release.Name }}
         release: {{ .Release.Name }}
-        meta.helm.sh/release-namespace: development
+        meta.helm.sh/release-namespace: fraudblok-development
 data:
   config: |
     user  nginx;

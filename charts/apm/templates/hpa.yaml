@@ -5,7 +5,7 @@ apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "apm.fullname" . }}
-  namespace: development
+  namespace: fraudblok-development
   labels:
     app: {{ .Chart.Name }}
     release: {{ .Release.Name | quote }}

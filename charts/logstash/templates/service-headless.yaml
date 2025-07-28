@@ -5,7 +5,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: "{{ template "logstash.fullname" . }}-headless"
-  namespace: development
+  namespace: fraudblok-development
   labels:
     app: "{{ template "logstash.fullname" . }}"
     chart: "{{ .Chart.Name }}"

@@ -6,7 +6,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "apm.fullname" . }}-config
-  namespace: development
+  namespace: fraudblok-development
   labels:
     app: "{{ template "apm.fullname" . }}"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
